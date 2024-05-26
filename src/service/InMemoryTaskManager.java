@@ -160,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public ArrayList<SubTask> getEpicSubTasks(Integer epicId) {
-        if (epics.get(epicId) == null){
+        if (epics.get(epicId) == null) {
             return new ArrayList<>();
         }
         ArrayList<SubTask> epicSubTasks = new ArrayList<>();
