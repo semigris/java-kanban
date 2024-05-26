@@ -40,7 +40,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> getHistory() {
         ArrayList<Task> tasksList = new ArrayList<>();
         Node currentNode = first;
-        while(currentNode != null){
+        while (currentNode != null) {
             tasksList.add(currentNode.task);
             currentNode = currentNode.next;
         }
@@ -59,10 +59,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         final Node lastNode = last;
         Node newNode = new Node(lastNode, task, null);
         last = newNode;
-        if(lastNode == null)
+        if(lastNode == null) {
             first = newNode;
-        else
+        } else {
             lastNode.next = newNode;
+        }
         return newNode;
     }
 
