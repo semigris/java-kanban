@@ -23,6 +23,7 @@ class InMemoryHistoryManagerTest {
     SubTask subTask2;
     SubTask subTask3;
     List<Task> expectedHistory;
+
     @BeforeEach
     void init() {
         taskManager = Managers.getDefault();

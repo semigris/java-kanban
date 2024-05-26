@@ -24,6 +24,7 @@ public interface TaskManager {
     void updateTask(Task task);
 
     void removeTask(Integer taskId);
+
     /**
      * EPIC
      */
@@ -40,6 +41,7 @@ public interface TaskManager {
     void removeEpic(Integer epicId);
 
     ArrayList<SubTask> getEpicSubTasks(Integer epicId);
+
     /**
      * SUBTASK
      */
