@@ -20,6 +20,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.epics = new HashMap<>();
         this.subTasks = new HashMap<>();
     }
+
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
@@ -49,7 +50,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeAllTasks() {
-        for (int taskId : tasks.keySet()){
+        for (int taskId : tasks.keySet()) {
             historyManager.remove(taskId);
         }
         tasks.clear();
@@ -107,10 +108,10 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeAllEpics() {
-        for (int epicId : epics.keySet()){
+        for (int epicId : epics.keySet()) {
             historyManager.remove(epicId);
         }
-        for (int subTasksId : subTasks.keySet()){
+        for (int subTasksId : subTasks.keySet()) {
             historyManager.remove(subTasksId);
         }
         epics.clear();
@@ -148,7 +149,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpic(Integer epicId) {
         List<Integer> epicSubTasksIds = epics.get(epicId).getSubTasksIds();
         historyManager.remove(epicId);
-        for (Integer subTaskId : epicSubTasksIds){
+        for (Integer subTaskId : epicSubTasksIds) {
             historyManager.remove(subTaskId);
             subTasks.remove(subTaskId);
         }
@@ -198,7 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeAllSubTasks() {
-        for (int subTasksId : subTasks.keySet()){
+        for (int subTasksId : subTasks.keySet()) {
             historyManager.remove(subTasksId);
         }
         subTasks.clear();

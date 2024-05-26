@@ -24,7 +24,7 @@ class InMemoryHistoryManagerTest {
     SubTask subTask3;
     List<Task> expectedHistory;
     @BeforeEach
-    void init(){
+    void init() {
         taskManager = Managers.getDefault();
 
         task1 = new Task("Task 1", "Description of Task 1", Status.NEW);
@@ -62,7 +62,7 @@ class InMemoryHistoryManagerTest {
         assertEquals(expectedHistory, history, "Список просмотренных задач не совпадает");
     }
 
-    void prepareExpectedHistoryList (){
+    void prepareExpectedHistoryList () {
         expectedHistory = new ArrayList<>();
         expectedHistory.add(taskManager.getEpic(epic1.getId()));
         expectedHistory.add(taskManager.getSubTask(subTask1.getId()));
