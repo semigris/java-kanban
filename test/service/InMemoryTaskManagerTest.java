@@ -1,4 +1,4 @@
-package test.service;
+package service;
 
 import model.Epic;
 import model.Status;
@@ -6,27 +6,31 @@ import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import service.Managers;
-import service.TaskManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerTest {
+class InMemoryTaskManagerTest {
     TaskManager taskManager;
     Task task1;
+    Task task2;
+    Task task3;
     Epic epic1;
     SubTask subTask1;
     SubTask subTask2;
-    List<Task> expectedHistory;
+
     @BeforeEach
-    void init(){
+    void init() {
         taskManager = Managers.getDefault();
 
         task1 = new Task("Task 1", "Description of Task 1", Status.NEW);
         taskManager.createTask(task1);
+        task2 = new Task("Task 2", "Description of Task 2", Status.NEW);
+        taskManager.createTask(task2);
+        task3 = new Task("Task 3", "Description of Task 3", Status.NEW);
+        taskManager.createTask(task3);
         epic1 = new Epic("Epic 1", "Description of Epic 1");
         taskManager.createEpic(epic1);
         subTask1 = new SubTask("SubTask 1.1", "Description of SubTask 1.1", Status.NEW, epic1.getId());
@@ -74,6 +78,8 @@ class TaskManagerTest {
     void shouldGetAllTasks() {
         List<Task> expectedTaskList = new ArrayList<>();
         expectedTaskList.add(task1);
+        expectedTaskList.add(task2);
+        expectedTaskList.add(task3);
         assertEquals(expectedTaskList.size(), taskManager.getAllTasks().size(),"Размер списоков задач не совпадает");
         assertEquals(expectedTaskList, taskManager.getAllTasks(),  "Списки задач не совпадают");
     }
@@ -100,7 +106,7 @@ class TaskManagerTest {
      */
     @Test
     void shouldRemoveAllTasks() {
-        assertEquals(1, taskManager.getAllTasks().size());
+        assertEquals(3, taskManager.getAllTasks().size());
         taskManager.removeAllTasks();
         assertEquals(0, taskManager.getAllTasks().size(), "Список задач не очищен");
     }
@@ -155,9 +161,33 @@ class TaskManagerTest {
      * Удаление по идентификатору объектов менеджера задач
      */
     @Test
-    void shouldRemoveTask() {
+    void shouldRemoveTaskFirst() {
+        List<Task> expectedTaskList = new ArrayList<>();
+        expectedTaskList.add(task2);
+        expectedTaskList.add(task3);
         taskManager.removeTask(task1.getId());
-        assertNull(taskManager.getTask(task1.getId()), "Задача по id не удалена");
+        assertEquals(expectedTaskList, taskManager.getAllTasks(),  "Списки задач после удаления Task 1 не совпадают");
+        assertNull(taskManager.getTask(task1.getId()), "Задача Task 1 не удалена по id");
+    }
+
+    @Test
+    void shouldRemoveTaskMiddle() {
+        List<Task> expectedTaskList = new ArrayList<>();
+        expectedTaskList.add(task1);
+        expectedTaskList.add(task3);
+        taskManager.removeTask(task2.getId());
+        assertEquals(expectedTaskList, taskManager.getAllTasks(),  "Списки задач после удаления Task 2 не совпадают");
+        assertNull(taskManager.getTask(task2.getId()), "Задача Task 2 не удалена по id");
+    }
+
+    @Test
+    void shouldRemoveTaskLast() {
+        List<Task> expectedTaskList = new ArrayList<>();
+        expectedTaskList.add(task1);
+        expectedTaskList.add(task2);
+        taskManager.removeTask(task3.getId());
+        assertEquals(expectedTaskList, taskManager.getAllTasks(),  "Списки задач после удаления Task 3 не совпадают");
+        assertNull(taskManager.getTask(task3.getId()), "Задача Task 3 не удалена по id");
     }
 
     @Test
@@ -176,7 +206,6 @@ class TaskManagerTest {
         assertEquals(Status.NEW, taskManager.getEpic(epic1.getId()).getStatus(), "Статус эпика не изменился после удаления подзадачи");
     }
 
-
     /**
      * Получение списка всех подзадач определённого эпика
      */
@@ -188,32 +217,5 @@ class TaskManagerTest {
         taskManager.getEpicSubTasks(epic1.getId());
         assertEquals(expectedSubTaskList.size(), taskManager.getAllSubTasks().size(),"Размер списоков подзадач не совпадает");
         assertEquals(expectedSubTaskList, taskManager.getAllSubTasks(),  "Списки подзадач не совпадают");
-    }
-
-    /**
-     * Отображение последних 10 просмотренных пользователем задач
-     */
-    @Test
-    void shouldGetHistory() {
-        prepareExpectedHistoryList();
-        List<Task> history;
-        for (int i = 1; i <= 5; i++){
-            taskManager.getTask(task1.getId());
-            taskManager.getEpic(epic1.getId());
-            taskManager.getSubTask(subTask1.getId());
-            taskManager.getAllTasks(); // не должен попасть в список
-        }
-        history = taskManager.getHistory();
-        assertEquals(expectedHistory, history, "10 последних просмотренных задач не совпадают");
-    }
-
-    void prepareExpectedHistoryList (){
-        expectedHistory = new ArrayList<>();
-        expectedHistory.add(taskManager.getSubTask(subTask1.getId()));
-        for (int i = 1; i <= 3; i++){
-            expectedHistory.add(taskManager.getTask(task1.getId()));
-            expectedHistory.add(taskManager.getEpic(epic1.getId()));
-            expectedHistory.add(taskManager.getSubTask(subTask1.getId()));
-        }
     }
 }

@@ -1,6 +1,3 @@
-import service.InMemoryTaskManager;
-
-import model.*;
 import service.*;
 
 public class Main {
